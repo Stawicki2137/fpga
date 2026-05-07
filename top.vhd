@@ -19,7 +19,6 @@ architecture rtl of top is
     signal rx_data  : std_logic_vector(7 downto 0);
     signal rx_valid : std_logic;
 
-    signal tx_data  : std_logic_vector(7 downto 0) := (others => '0');
     signal tx_start : std_logic := '0';
     signal tx_busy  : std_logic;
 
@@ -50,7 +49,7 @@ begin
         port map (
             clk      => clk,
             rst      => btnC,
-            data_in  => tx_data,
+            data_in  => rx_data,   -- WAŻNA ZMIANA: bezpośrednio rx_data
             tx_start => tx_start,
             tx       => ble_tx,
             tx_busy  => tx_busy
@@ -62,7 +61,6 @@ begin
 
             if btnC = '1' then
                 led_reg  <= (others => '0');
-                tx_data  <= (others => '0');
                 tx_start <= '0';
 
             else
@@ -74,7 +72,6 @@ begin
 
                     -- odeślij ten sam bajt jako echo
                     if tx_busy = '0' then
-                        tx_data  <= rx_data;
                         tx_start <= '1';
                     end if;
                 end if;
